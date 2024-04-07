@@ -1,0 +1,159 @@
+import axios from 'axios';
+import { saveAs } from 'file-saver';
+import React, { useEffect, useState } from 'react';
+
+
+
+function Info() {
+
+    const [info,setInfo]=useState("");
+
+    useEffect(()=>{
+        axios.get("http://localhost:8080/api/getByempId/1")
+        .then((response)=>setInfo(response.data))
+    },[]);
+
+
+  const handleDownload=(fileNamed,folder)=>{
+    let fileName="";
+    for(let i of fileNamed){
+      if(i!=" "){
+        fileName+=i;
+      }
+    }
+
+    axios.get(`http://localhost:8080/api/download?folder=${folder}&fileName=${fileName}`,
+    {responseType: 'arraybuffer'})
+    .then(response => {
+        // Convert ArrayBuffer to Blob
+        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+      saveAs(pdfBlob,fileName)
+      })
+    .catch(error => {
+        console.error('Failed to fetch or download PDF:', error);
+  });
+  
+  }
+
+
+  
+
+  return (
+    <>
+
+<div className='bg-white w-1/2 p-4 rounded-md ml-10 mt-5 border-2 border-gray-200'>
+
+  <h1 className='text-xl font-semibold mb-2'>Statutory Details</h1>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>Pan Number</div>
+    <div className='text-black font-medium'>{info.panNumber}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>Pan Copy</div>
+    <div className='text-blue-800 cursor-pointer font-medium' onClick={()=>handleDownload(info.panCopy,info.folder)}>{info.panCopy}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96 text-gray-600 font-semibold'>Aadhar Number</div>
+    <div className='text-black font-medium'>{info.aadharNumber}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>Aadhar Copy</div>
+    <div className='text-blue-800 cursor-pointer font-medium' onClick={()=>handleDownload(info.aadaharCopy,info.folder)}>{info.aadaharCopy}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>Name as per pan Card</div>
+    <div className='text-black font-medium'>{info.nameAadhar}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>UAN</div>
+    <div className='text-black font-medium'>{info.uan}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>Father / Husband Name</div>
+    <div className='text-black font-medium'>{info.fatherHusbandName}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>Relationship with the person</div>
+    <div className='text-black font-medium'>{info.relation}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>Earlier a member of PF</div>
+    <div className='text-black font-medium'>{info.memberPF}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>International Worker</div>
+    <div className='text-black font-medium'>{info.intlWorker}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>Specially Abled</div>
+    <div className='text-black font-medium'>{info.spAbled}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>PF Linked Bank Name</div>
+    <div className='text-black font-medium'>{info.pfbankName}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-medium'>PF Linked Bank Account</div>
+    <div className='text-black font-medium'>{info.pfbankAccount}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-medium'>PF Linked Bank IFSC</div>
+    <div className='text-black font-medium'>{info.pfbankIfsc}</div>
+  </div>
+
+  <h2 className='border-b-[1px] border-gray-200 my-1'></h2>
+
+  <div className='flex'>
+    <div className=' w-96  text-gray-600 font-semibold'>LWD of previous company</div>
+    <div className='text-black font-medium'>{info.prevCompany}</div>
+  </div>
+
+    </div>
+    </>
+  )
+}
+
+export default Info
